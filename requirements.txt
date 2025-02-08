@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+gunicorn
+pydantic
+google-cloud-texttospeech
+google-cloud
+google
+openai
