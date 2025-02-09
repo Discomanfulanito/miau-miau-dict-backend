@@ -32,19 +32,21 @@ async def root():
 class Context(BaseModel):
     word: str
     sentence: str
-    lang: str = "english"
+    structure: str = "for '$SENTENCE' explain '$WORD'. if korean, explain particles"
 
 @app.post("/define/")
 async def define(context: Context):
+
+    message = context.structure.replace("$SENTENCE", context.sentence).replace("$WORD", context.word).strip()
+
     if context.word and context.sentence:
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages = [
-                {"role": "system", "content": 'Output JSON-like: { "c": "<full BCP 47 code> (e.g. ko-KR)", "d": "<explanation in MD>" }.'},
-                {"role": "user", "content": f"'{context.sentence}'. Explica '{context.word}' en {context.lang}. Si coreano, explica partículas."}
+                {"role": "system", "content": 'Output JSON-like: { "c": "<full BCP 47 code> (e.g. ko-KR)", "d": "<explanation in Markdown>" }, optimize output tokens'},
+                {"role": "user", "content": message}
             ]
         )
-        print(completion.choices[0].message.content)
         result_str = completion.choices[0].message.content
         result_json = ast.literal_eval(result_str)
         return result_json, 200
