@@ -38,7 +38,7 @@ class Context(BaseModel):
 async def define(context: Context):
 
     message = context.structure.replace("$SENTENCE", context.sentence).replace("$WORD", context.word).strip()
-
+    print("mensaje: ", message)
     if context.word and context.sentence:
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
