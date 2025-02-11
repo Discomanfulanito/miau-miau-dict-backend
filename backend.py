@@ -38,7 +38,7 @@ class Context(BaseModel):
 @app.post("/define/")
 async def define(context: Context):
 
-    message = context.structure.replace("$SENTENCE", context.sentence).replace("$WORD", context.word).strip()
+    message = context.structure.replace("$SENTENCE", context.sentence).replace("$WORD", context.word).replace("$SOUND", "").strip()
     if context.md: markdown = " in markdown"
     else: markdown= ""
     if context.word and context.sentence:
