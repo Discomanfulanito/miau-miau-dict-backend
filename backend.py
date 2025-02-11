@@ -32,18 +32,20 @@ async def root():
 class Context(BaseModel):
     word: str
     sentence: str
-    structure: str = "for '$SENTENCE' explain '$WORD'. if korean, explain particles"
+    structure: str = "for '$SENTENCE' explain '$WORD'. if korean, explain particles, extremely brief"
+    md: bool
 
 @app.post("/define/")
 async def define(context: Context):
 
     message = context.structure.replace("$SENTENCE", context.sentence).replace("$WORD", context.word).strip()
-    print("mensaje: ", message)
+    if context.md: markdown = " in markdown"
+    else: markdown= ""
     if context.word and context.sentence:
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages = [
-                {"role": "system", "content": 'Output JSON-like: { "c": "<full BCP 47 code> (e.g. ko-KR)", "d": "<explanation in Markdown>" }, optimize output tokens'},
+                {"role": "system", "content": f'Output JSON-like: {{ "c": "<full BCP 47 code> (e.g. ko-KR)", "d": "<explanation{markdown}>" }}, optimize output tokens'},
                 {"role": "user", "content": message}
             ]
         )
