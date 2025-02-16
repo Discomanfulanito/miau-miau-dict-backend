@@ -77,4 +77,26 @@ async def generate_speech(request: TextRequest):
 
     return {"audio": audio_base64}
 
+
+
+####---- Examples ----####
+class Request(BaseModel):
+    word: str
+    lang: str
+@app.post("/examples/")
+async def examples(request: Request):
+
+    message = f"give examples of the use of word {request.word} in {request.lang}"
     
+    completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages = [
+                {"role": "system", "content": f'Output list of tuples, [(example,  brew explanation of the use of the given word in the example)], optimize output tokens'},
+                {"role": "user", "content": message}
+            ]
+        )
+    result_str = completion.choices[0].message.content
+    print(result_str)
+    result_json = ast.literal_eval(result_str)
+
+    return result_json, 200
