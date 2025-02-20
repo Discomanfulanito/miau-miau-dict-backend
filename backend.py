@@ -99,7 +99,7 @@ async def examples(request: ExampleRequest):
     completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages = [
-                {"role": "system", "content": f"Output JSON-like {'example': 'brew explanation of the use of the given word in the example'} optimize output tokens"},
+                {"role": "system", "content": f"Output JSON-like {{'example': 'brew explanation of the use of the given word in the example'}} optimize output tokens"},
                 {"role": "user", "content": message}
             ]
         )
