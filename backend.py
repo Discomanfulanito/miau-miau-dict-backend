@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import google.cloud.texttospeech as tts
 from google.cloud import texttospeech
@@ -78,8 +79,15 @@ async def generate_speech(request: TextRequest):
     return {"audio": audio_base64}
 
 
-
 ####---- Examples ----####
+@app.options("/examples/")
+async def preflight_examples():
+    response = JSONResponse(content={})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    return response
+
 class ExampleRequest(BaseModel):
     word: str
     lang: str
@@ -98,5 +106,6 @@ async def examples(request: ExampleRequest):
     result_str = completion.choices[0].message.content
     print(result_str)
     result_json = ast.literal_eval(result_str)
-
-    return result_json, 200
+    response = JSONResponse(content=result_json, status_code=200)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
