@@ -80,11 +80,11 @@ async def generate_speech(request: TextRequest):
 
 
 ####---- Examples ----####
-class Request(BaseModel):
+class ExampleRequest(BaseModel):
     word: str
     lang: str
 @app.post("/examples/")
-async def examples(request: Request):
+async def examples(request: ExampleRequest):
 
     message = f"give examples of the use of word {request.word} in {request.lang}"
     
