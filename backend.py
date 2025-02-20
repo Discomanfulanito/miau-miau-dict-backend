@@ -80,13 +80,13 @@ async def generate_speech(request: TextRequest):
 
 
 ####---- Examples ----####
-@app.options("/examples/")
+"""@app.options("/examples/")
 async def preflight_examples():
     response = JSONResponse(content={})
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    return response
+    return response"""
 
 class ExampleRequest(BaseModel):
     word: str
@@ -99,13 +99,14 @@ async def examples(request: ExampleRequest):
     completion = client.chat.completions.create(
             model="gpt-4o-mini",
             messages = [
-                {"role": "system", "content": f"Output list of tuples like (\'example\',  \'brew explanation of the use of the given word in the example\') optimize output tokens"},
+                {"role": "system", "content": f"Output JSON-like {'example': 'brew explanation of the use of the given word in the example'} optimize output tokens"},
                 {"role": "user", "content": message}
             ]
         )
     result_str = completion.choices[0].message.content
     print(result_str)
     result_json = ast.literal_eval(result_str)
+    return result_json, 200
     response = JSONResponse(content=result_json, status_code=200)
     response.headers["Access-Control-Allow-Origin"] = "*"
     return response
