@@ -104,7 +104,7 @@ async def examples(request: ExampleRequest):
             ]
         )
     result_str = completion.choices[0].message.content
-    print(result_str)
+    print("str:",result_str)
     result_json = ast.literal_eval(result_str)
     return result_json, 200
     response = JSONResponse(content=result_json, status_code=200)
